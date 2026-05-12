@@ -30,6 +30,7 @@ fn main() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
             let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
+            let app_handle = app.handle().clone();
             let window = tauri::WebviewWindowBuilder::new(
                 app,
                 window::MAIN_WINDOW_LABEL,
@@ -39,6 +40,15 @@ fn main() {
             .inner_size(1280.0, 900.0)
             .center()
             .user_agent(USER_AGENT)
+            .on_navigation(move |url| {
+                if features::external_links::is_whitelisted(url) {
+                    true
+                } else {
+                    use tauri_plugin_opener::OpenerExt;
+                    let _ = app_handle.opener().open_url(url.as_str(), None::<&str>);
+                    false
+                }
+            })
             .build()?;
 
             window::attach_close_to_tray(&window);
