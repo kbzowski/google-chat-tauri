@@ -61,11 +61,17 @@ fn main() {
             features::notifications::setup_click_handler(app.handle());
             features::badge::setup_listener(app.handle());
 
+            let menu = features::menu::build(app.handle())?;
+            app.set_menu(menu)?;
+
             if window::should_start_hidden(std::env::args()) {
                 let _ = window.hide();
             }
 
             Ok(())
+        })
+        .on_menu_event(|app, event| {
+            features::menu::handle_event(app, event.id.as_ref());
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
