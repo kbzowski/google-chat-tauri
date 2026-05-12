@@ -55,6 +55,7 @@ fn main() {
             window::attach_close_to_tray(&window);
             features::tray::build_tray(app)?;
             features::notifications::setup_click_handler(app.handle());
+            features::badge::setup_listener(app.handle());
 
             if window::should_start_hidden(std::env::args()) {
                 let _ = window.hide();
