@@ -70,6 +70,7 @@ fn main() {
             features::notifications::setup_click_handler(app.handle());
             features::badge::setup_listener(app.handle());
             features::injection_log::setup_listener(app.handle());
+            features::crash_report::install_hook(app.handle().clone());
 
             let menu = features::menu::build(app.handle())?;
             app.set_menu(menu)?;
