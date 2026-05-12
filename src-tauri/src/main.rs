@@ -34,6 +34,7 @@ fn main() {
             features::config::get_settings,
             features::config::set_settings,
             features::config::get_custom_css,
+            features::debug_info::get_debug_info,
             features::zoom::get_zoom_level,
             features::zoom::set_zoom_level,
         ])
