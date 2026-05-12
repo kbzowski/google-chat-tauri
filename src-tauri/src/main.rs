@@ -52,6 +52,7 @@ fn main() {
             .build()?;
 
             window::attach_close_to_tray(&window);
+            features::tray::build_tray(app)?;
 
             if window::should_start_hidden(std::env::args()) {
                 let _ = window.hide();
