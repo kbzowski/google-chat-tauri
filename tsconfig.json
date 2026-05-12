@@ -14,6 +14,12 @@
     "allowJs": false,
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "injection/**/*.ts",
+    "vite.config.ts",
+    "vite.config.injection.ts"
+  ],
   "exclude": ["node_modules", "dist", "src-tauri"]
 }

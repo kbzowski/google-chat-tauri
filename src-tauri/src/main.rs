@@ -7,6 +7,7 @@ use features::user_agent::USER_AGENT;
 use features::window;
 
 const GOOGLE_CHAT_URL: &str = "https://mail.google.com/chat/u/0";
+const INJECTION_SCRIPT: &str = include_str!("../injection.js");
 
 fn main() {
     tauri::Builder::default()
@@ -45,6 +46,7 @@ fn main() {
             .inner_size(1280.0, 900.0)
             .center()
             .user_agent(USER_AGENT)
+            .initialization_script(INJECTION_SCRIPT)
             .on_navigation(move |url| {
                 if features::external_links::is_whitelisted(url) {
                     true

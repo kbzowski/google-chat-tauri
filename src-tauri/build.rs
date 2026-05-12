@@ -40,6 +40,7 @@ fn main() {
     println!("cargo:rustc-env=FIREFOX_USER_AGENT={}", user_agent);
     println!("cargo:rustc-env=BUILD_DATE={}", build_date);
     println!("cargo:rerun-if-env-changed=FIREFOX_VERSION");
+    println!("cargo:rerun-if-changed=injection.js");
 
     tauri_build::build();
 }

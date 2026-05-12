@@ -3,6 +3,9 @@ target/
 **/*.rs.bk
 src-tauri/gen/
 
+# Bundled injection script (built by vite from injection/)
+src-tauri/injection.js
+
 # Node
 node_modules/
 dist/
