@@ -3,6 +3,7 @@ import { installFaviconObserver } from './favicon-observer';
 import { installNotificationPatch } from './notification-patch';
 import { installSearchFocus } from './search-focus';
 import { installUnreadCounter } from './unread-counter';
+import { installZoom } from './zoom';
 
 declare global {
   interface Window {
@@ -19,6 +20,7 @@ if (!window.__googleChatTauriInjected) {
     installFaviconObserver();
     installUnreadCounter();
     installSearchFocus();
+    installZoom();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);

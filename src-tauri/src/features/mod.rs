@@ -8,3 +8,4 @@ pub mod online;
 pub mod tray;
 pub mod user_agent;
 pub mod window;
+pub mod zoom;

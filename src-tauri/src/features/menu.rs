@@ -1,7 +1,9 @@
 use tauri::menu::{Menu, MenuBuilder, MenuItem, PredefinedMenuItem, SubmenuBuilder};
 use tauri::{AppHandle, Emitter, Manager, Wry};
 
+use crate::features::config::{load, save};
 use crate::features::window::MAIN_WINDOW_LABEL;
+use crate::features::zoom::{clamp, ZOOM_STEP};
 
 const LOGOUT_URL: &str = "https://accounts.google.com/Logout";
 const HOME_URL: &str = "https://mail.google.com/chat/u/0";
@@ -293,8 +295,18 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         "search" => {
             let _ = app.emit("search-shortcut", ());
         }
-        // Wired up in later phases: zoom (Faza 3 last commits), Preferences (Faza 4),
-        // Help dialogs (Faza 4/5), updater (Faza 6).
+        "zoom-in" | "zoom-out" | "reset-zoom" => {
+            let mut settings = load(app);
+            settings.zoom_level = match event_id {
+                "zoom-in" => clamp(settings.zoom_level + ZOOM_STEP),
+                "zoom-out" => clamp(settings.zoom_level - ZOOM_STEP),
+                _ => 1.0,
+            };
+            let _ = save(app, &settings);
+            let _ = app.emit("apply-zoom", settings.zoom_level);
+        }
+        // Wired up in later phases: Preferences (Faza 4), Help dialogs (Faza 4/5),
+        // updater (Faza 6).
         _ => {}
     }
 }

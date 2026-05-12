@@ -33,6 +33,8 @@ fn main() {
             features::online::check_if_online,
             features::config::get_settings,
             features::config::set_settings,
+            features::zoom::get_zoom_level,
+            features::zoom::set_zoom_level,
         ])
         .setup(|app| {
             let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
