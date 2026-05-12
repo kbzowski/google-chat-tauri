@@ -303,6 +303,9 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         | "pref-disable-spellcheck" => {
             let _ = crate::features::windows::open_settings(app.clone());
         }
+        "help-about" => {
+            let _ = crate::features::windows::open_about(app.clone());
+        }
         "zoom-in" | "zoom-out" | "reset-zoom" => {
             let mut settings = load(app);
             settings.zoom_level = match event_id {
