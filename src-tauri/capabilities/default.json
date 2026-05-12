@@ -1,12 +1,24 @@
 {
   "$schema": "https://schemas.tauri.app/schema/2/capabilities/capability.json",
   "identifier": "default",
-  "description": "Default capabilities for the main window",
-  "windows": ["main"],
+  "description": "Default capabilities for the main window and auxiliary windows",
+  "windows": ["main", "settings", "offline", "about"],
   "permissions": [
     "core:default",
     "core:event:default",
     "core:event:allow-emit",
-    "core:event:allow-listen"
+    "core:event:allow-listen",
+    "autostart:default",
+    "clipboard-manager:default",
+    "dialog:default",
+    "global-shortcut:default",
+    "log:default",
+    "notification:default",
+    "opener:default",
+    "process:default",
+    "shell:default",
+    "store:default",
+    "updater:default",
+    "window-state:default"
   ]
 }
