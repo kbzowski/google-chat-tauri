@@ -1,6 +1,7 @@
 import { installErrorCapture } from './error-capture';
 import { installFaviconObserver } from './favicon-observer';
 import { installNotificationPatch } from './notification-patch';
+import { installSearchFocus } from './search-focus';
 import { installUnreadCounter } from './unread-counter';
 
 declare global {
@@ -17,6 +18,7 @@ if (!window.__googleChatTauriInjected) {
   const initDom = () => {
     installFaviconObserver();
     installUnreadCounter();
+    installSearchFocus();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);

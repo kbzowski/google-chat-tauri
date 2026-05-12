@@ -1,5 +1,5 @@
 use tauri::menu::{Menu, MenuBuilder, MenuItem, PredefinedMenuItem, SubmenuBuilder};
-use tauri::{AppHandle, Manager, Wry};
+use tauri::{AppHandle, Emitter, Manager, Wry};
 
 use crate::features::window::MAIN_WINDOW_LABEL;
 
@@ -290,7 +290,10 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
                 let _ = w.eval(format!("window.location.href='{HOME_URL}'"));
             }
         }
-        // Wired up in later phases: search/zoom (Faza 3/5), Preferences (Faza 4),
+        "search" => {
+            let _ = app.emit("search-shortcut", ());
+        }
+        // Wired up in later phases: zoom (Faza 3 last commits), Preferences (Faza 4),
         // Help dialogs (Faza 4/5), updater (Faza 6).
         _ => {}
     }
