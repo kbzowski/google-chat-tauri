@@ -214,6 +214,13 @@ pub fn build(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
         .separator()
         .item(&MenuItem::with_id(
             app,
+            "help-offline",
+            "Show Offline Page",
+            true,
+            None::<&str>,
+        )?)
+        .item(&MenuItem::with_id(
+            app,
             "help-show-logs",
             "Show Logs in File Manager",
             true,
@@ -305,6 +312,9 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         }
         "help-about" => {
             let _ = crate::features::windows::open_about(app.clone());
+        }
+        "help-offline" => {
+            let _ = crate::features::windows::open_offline(app.clone());
         }
         "zoom-in" | "zoom-out" | "reset-zoom" => {
             let mut settings = load(app);
