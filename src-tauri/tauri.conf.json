@@ -4,7 +4,10 @@
   "version": "0.0.1",
   "identifier": "com.google-chat-tauri.app",
   "build": {
-    "frontendDist": "../frontend"
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build"
   },
   "app": {
     "security": {
