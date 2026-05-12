@@ -1,3 +1,5 @@
+import { installErrorCapture } from './error-capture';
+
 declare global {
   interface Window {
     __googleChatTauriInjected?: boolean;
@@ -6,7 +8,5 @@ declare global {
 
 if (!window.__googleChatTauriInjected) {
   window.__googleChatTauriInjected = true;
-  // Modules register here in subsequent commits.
+  installErrorCapture();
 }
-
-export {};

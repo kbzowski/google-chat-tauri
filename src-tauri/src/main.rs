@@ -62,6 +62,7 @@ fn main() {
             features::tray::build_tray(app)?;
             features::notifications::setup_click_handler(app.handle());
             features::badge::setup_listener(app.handle());
+            features::injection_log::setup_listener(app.handle());
 
             let menu = features::menu::build(app.handle())?;
             app.set_menu(menu)?;

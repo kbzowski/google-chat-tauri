@@ -1,6 +1,7 @@
 pub mod badge;
 pub mod config;
 pub mod external_links;
+pub mod injection_log;
 pub mod menu;
 pub mod notifications;
 pub mod online;

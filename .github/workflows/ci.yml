@@ -23,18 +23,31 @@ jobs:
         run: pnpm biome check .
       - name: TypeScript
         run: pnpm tsc --noEmit
+      - name: Vitest
+        run: pnpm test
 
   rust:
     name: Rust check
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: "src-tauri -> target"
+      - name: Install node deps
+        run: pnpm install --frozen-lockfile
+      - name: Build injection bundle
+        run: pnpm build:injection
       - name: rustfmt
         run: cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
       - name: clippy
