@@ -295,6 +295,14 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         "search" => {
             let _ = app.emit("search-shortcut", ());
         }
+        "pref-auto-update"
+        | "pref-autostart"
+        | "pref-start-hidden"
+        | "pref-show-on-message"
+        | "pref-hide-menu-bar"
+        | "pref-disable-spellcheck" => {
+            let _ = crate::features::windows::open_settings(app.clone());
+        }
         "zoom-in" | "zoom-out" | "reset-zoom" => {
             let mut settings = load(app);
             settings.zoom_level = match event_id {

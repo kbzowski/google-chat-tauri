@@ -37,6 +37,9 @@ fn main() {
             features::debug_info::get_debug_info,
             features::zoom::get_zoom_level,
             features::zoom::set_zoom_level,
+            features::windows::open_settings,
+            features::windows::open_about,
+            features::windows::open_offline,
         ])
         .setup(|app| {
             let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
