@@ -1,6 +1,7 @@
 import { installErrorCapture } from './error-capture';
 import { installFaviconObserver } from './favicon-observer';
 import { installNotificationPatch } from './notification-patch';
+import { installUnreadCounter } from './unread-counter';
 
 declare global {
   interface Window {
@@ -15,6 +16,7 @@ if (!window.__googleChatTauriInjected) {
 
   const initDom = () => {
     installFaviconObserver();
+    installUnreadCounter();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);
