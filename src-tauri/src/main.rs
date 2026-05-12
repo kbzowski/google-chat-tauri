@@ -56,8 +56,10 @@ fn main() {
             .initialization_script(INJECTION_SCRIPT)
             .on_navigation(move |url| {
                 if features::external_links::is_whitelisted(url) {
+                    log::debug!(target: "navigation", "ALLOW {}", url.as_str());
                     true
                 } else {
+                    log::info!(target: "navigation", "EXTERNAL {}", url.as_str());
                     use tauri_plugin_opener::OpenerExt;
                     let _ = app_handle.opener().open_url(url.as_str(), None::<&str>);
                     false

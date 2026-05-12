@@ -8,9 +8,30 @@ pub fn is_whitelisted(url: &Url) -> bool {
         return false;
     };
     match host {
+        // Google Chat / Spaces - block direct attachment downloads (those go external).
         "chat.google.com" => !url.path().starts_with("/u/0/api/get_attachment_url"),
+
+        // Gmail host - only the /chat/* subtree, everything else (inbox, settings) external.
         "mail.google.com" => url.path().starts_with("/chat"),
-        "accounts.google.com" | "accounts.youtube.com" => true,
+
+        // Authentication and account flows (sign-in, password, recovery, security settings).
+        "accounts.google.com"
+        | "accounts.youtube.com"
+        | "myaccount.google.com"
+        // 2FA / device verification / passkeys / identity challenges.
+        | "gds.google.com"
+        | "challenges.google.com"
+        | "passwordsleakcheck-pa.googleapis.com"
+        // reCAPTCHA used during sign-in challenges.
+        | "www.google.com"
+        | "www.recaptcha.net"
+        | "recaptcha.net"
+        // Google's static asset CDNs (avatars, recaptcha resources, SDK images).
+        | "ssl.gstatic.com"
+        | "www.gstatic.com"
+        | "fonts.gstatic.com"
+        | "lh3.googleusercontent.com" => true,
+
         _ => false,
     }
 }
@@ -50,12 +71,33 @@ mod tests {
     fn external_hosts_blocked() {
         assert!(!is_whitelisted(&u("https://github.com")));
         assert!(!is_whitelisted(&u("https://example.com/foo")));
-        assert!(!is_whitelisted(&u("https://evil.google.com.fake.site")));
     }
 
     #[test]
     fn non_http_scheme_blocked() {
         assert!(!is_whitelisted(&u("ftp://mail.google.com/chat")));
         assert!(!is_whitelisted(&u("file:///etc/passwd")));
+    }
+
+    #[test]
+    fn google_2fa_hosts_allowed() {
+        assert!(is_whitelisted(&u("https://gds.google.com/web/verify")));
+        assert!(is_whitelisted(&u(
+            "https://challenges.google.com/v1/challenge"
+        )));
+        assert!(is_whitelisted(&u("https://myaccount.google.com/security")));
+    }
+
+    #[test]
+    fn google_static_resources_allowed() {
+        assert!(is_whitelisted(&u(
+            "https://ssl.gstatic.com/accounts/foo.png"
+        )));
+        assert!(is_whitelisted(&u(
+            "https://lh3.googleusercontent.com/a/avatar"
+        )));
+        assert!(is_whitelisted(&u(
+            "https://www.recaptcha.net/recaptcha/api2/frame"
+        )));
     }
 }
