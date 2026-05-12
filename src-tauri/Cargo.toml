@@ -7,6 +7,9 @@ description = "Tauri reimplementation of Google Chat desktop client for Windows"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+ureq = { version = "2", default-features = false, features = ["tls", "json"] }
+serde_json = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
