@@ -33,6 +33,7 @@ fn main() {
             features::online::check_if_online,
             features::config::get_settings,
             features::config::set_settings,
+            features::config::get_custom_css,
             features::zoom::get_zoom_level,
             features::zoom::set_zoom_level,
         ])

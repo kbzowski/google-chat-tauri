@@ -1,3 +1,4 @@
+import { installCustomCss } from './custom-css';
 import { installErrorCapture } from './error-capture';
 import { installFaviconObserver } from './favicon-observer';
 import { installNotificationPatch } from './notification-patch';
@@ -21,6 +22,7 @@ if (!window.__googleChatTauriInjected) {
     installUnreadCounter();
     installSearchFocus();
     installZoom();
+    installCustomCss();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);

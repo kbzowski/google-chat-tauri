@@ -90,6 +90,11 @@ pub fn set_settings(app: AppHandle, settings: AppSettings) -> Result<(), String>
     save(&app, &settings)
 }
 
+#[tauri::command]
+pub fn get_custom_css(app: AppHandle) -> String {
+    load(&app).custom_css
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
