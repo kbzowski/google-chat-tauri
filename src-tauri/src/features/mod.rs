@@ -1,4 +1,5 @@
 pub mod badge;
+pub mod config;
 pub mod external_links;
 pub mod notifications;
 pub mod online;

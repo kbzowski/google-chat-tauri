@@ -28,7 +28,11 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_clipboard_manager::init())
-        .invoke_handler(tauri::generate_handler![features::online::check_if_online])
+        .invoke_handler(tauri::generate_handler![
+            features::online::check_if_online,
+            features::config::get_settings,
+            features::config::set_settings,
+        ])
         .setup(|app| {
             let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
             let app_handle = app.handle().clone();
