@@ -1,0 +1,14 @@
+<script lang="ts">
+// Filled in commit 4.
+</script>
+
+<main class="placeholder">
+  <h1>Settings</h1>
+  <p>Coming up in the next commit.</p>
+</main>
+
+<style>
+  .placeholder {
+    padding: 1rem;
+  }
+</style>

@@ -1,15 +1,32 @@
 <script lang="ts">
-// Placeholder root for auxiliary windows. Real content lands in Faza 4
-// (Settings, Offline, About).
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+import About from './views/About.svelte';
+import Offline from './views/Offline.svelte';
+import Settings from './views/Settings.svelte';
+
+let label = $state('');
+try {
+  label = getCurrentWebviewWindow().label;
+} catch {
+  label = '';
+}
 </script>
 
-<main>
-  <h1>google-chat-tauri</h1>
-  <p>Auxiliary window placeholder.</p>
-</main>
+{#if label === 'settings'}
+  <Settings />
+{:else if label === 'about'}
+  <About />
+{:else if label === 'offline'}
+  <Offline />
+{:else}
+  <main class="placeholder">
+    <h1>google-chat-tauri</h1>
+    <p>Unknown window label: <code>{label || '(none)'}</code></p>
+  </main>
+{/if}
 
 <style>
-  main {
+  .placeholder {
     font-family: system-ui, sans-serif;
     padding: 1rem;
   }
