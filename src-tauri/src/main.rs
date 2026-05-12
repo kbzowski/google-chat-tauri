@@ -4,24 +4,21 @@
 mod features;
 
 use features::user_agent::USER_AGENT;
-use tauri::Manager;
+use features::window;
 
 const GOOGLE_CHAT_URL: &str = "https://mail.google.com/chat/u/0";
 
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.show();
-                let _ = window.set_focus();
-            }
+            window::toggle_main_window(app);
         }))
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
-            None,
+            Some(vec!["--start-hidden"]),
         ))
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
@@ -33,12 +30,23 @@ fn main() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
             let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
-            tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::External(url))
-                .title("Google Chat")
-                .inner_size(1280.0, 900.0)
-                .center()
-                .user_agent(USER_AGENT)
-                .build()?;
+            let window = tauri::WebviewWindowBuilder::new(
+                app,
+                window::MAIN_WINDOW_LABEL,
+                tauri::WebviewUrl::External(url),
+            )
+            .title("Google Chat")
+            .inner_size(1280.0, 900.0)
+            .center()
+            .user_agent(USER_AGENT)
+            .build()?;
+
+            window::attach_close_to_tray(&window);
+
+            if window::should_start_hidden(std::env::args()) {
+                let _ = window.hide();
+            }
+
             Ok(())
         })
         .run(tauri::generate_context!())

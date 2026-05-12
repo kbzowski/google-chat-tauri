@@ -1,0 +1,67 @@
+use tauri::{AppHandle, Manager, WebviewWindow, WindowEvent};
+
+pub const MAIN_WINDOW_LABEL: &str = "main";
+
+pub fn attach_close_to_tray(window: &WebviewWindow) {
+    let win = window.clone();
+    window.on_window_event(move |event| {
+        if let WindowEvent::CloseRequested { api, .. } = event {
+            api.prevent_close();
+            let _ = win.hide();
+        }
+    });
+}
+
+pub fn toggle_main_window(app: &AppHandle) {
+    let Some(window) = app.get_webview_window(MAIN_WINDOW_LABEL) else {
+        return;
+    };
+    match window.is_visible() {
+        Ok(true) => match window.is_focused() {
+            Ok(true) => {
+                let _ = window.hide();
+            }
+            _ => {
+                let _ = window.set_focus();
+            }
+        },
+        _ => {
+            let _ = window.show();
+            let _ = window.set_focus();
+        }
+    }
+}
+
+pub fn should_start_hidden(args: impl IntoIterator<Item = String>) -> bool {
+    args.into_iter()
+        .any(|a| a == "--start-hidden" || a == "--hidden")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn detects_start_hidden_long_flag() {
+        let args = vec!["app.exe".into(), "--start-hidden".into()];
+        assert!(should_start_hidden(args));
+    }
+
+    #[test]
+    fn detects_legacy_hidden_flag() {
+        let args = vec!["app.exe".into(), "--hidden".into()];
+        assert!(should_start_hidden(args));
+    }
+
+    #[test]
+    fn no_flag_means_visible() {
+        let args = vec!["app.exe".into()];
+        assert!(!should_start_hidden(args));
+    }
+
+    #[test]
+    fn unrelated_flag_does_not_match() {
+        let args = vec!["app.exe".into(), "--start-something-else".into()];
+        assert!(!should_start_hidden(args));
+    }
+}
