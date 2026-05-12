@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.tauri.app/schema/2/capabilities/capability.json",
+  "identifier": "default",
+  "description": "Default capabilities for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:event:allow-emit",
+    "core:event:allow-listen"
+  ]
+}

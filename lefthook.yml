@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: "*.{js,ts,svelte,json}"
+      run: pnpm biome check --write --no-errors-on-unmatched {staged_files} && git add {staged_files}
+    rustfmt:
+      glob: "*.rs"
+      run: cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm tsc --noEmit
+    clippy:
+      run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+    cargo-test:
+      run: cargo test --manifest-path src-tauri/Cargo.toml
+
+commit-msg:
+  commands:
+    conventional:
+      run: sh .lefthook/commit-msg.sh {1}

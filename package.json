@@ -1,0 +1,28 @@
+{
+  "name": "google-chat-tauri",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "description": "Tauri reimplementation of Google Chat desktop client for Windows",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
+    "@tauri-apps/cli": "^2.11.1",
+    "lefthook": "^2.1.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.12"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook"
+    ]
+  }
+}

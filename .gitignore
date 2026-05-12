@@ -1,0 +1,26 @@
+# Rust
+target/
+**/*.rs.bk
+src-tauri/gen/
+
+# Node
+node_modules/
+dist/
+.pnpm-store/
+
+# Signing keys / secrets (NEVER commit)
+*.key
+*.pem
+tauri-signing*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

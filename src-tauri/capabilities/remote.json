@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schemas.tauri.app/schema/2/capabilities/capability.json",
+  "identifier": "remote-access",
+  "description": "Pozwala zewnętrznemu URL (Google Chat) wywoływać komendy Tauri",
+  "remote": {
+    "urls": [
+      "https://mail.google.com/*",
+      "https://chat.google.com/*",
+      "https://accounts.google.com/*",
+      "https://*.google.com/*"
+    ]
+  },
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:event:allow-emit",
+    "core:event:allow-listen"
+  ]
+}
