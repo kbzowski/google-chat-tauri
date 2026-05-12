@@ -2,7 +2,7 @@
 
 Desktop client for Google Chat built with [Tauri 2.x](https://tauri.app/), Rust, and Svelte 5.
 
-**Scope: Windows only.** Linux/macOS targets use WebKit, which Google blocks at the TLS-fingerprint level during OAuth — see the migration spec for details.
+**Scope: Windows only.** Linux/macOS targets use WebKit, which Google blocks at the TLS-fingerprint level during OAuth - see the migration spec for details.
 
 This is a fresh reimplementation of the Electron-based [google-chat-electron](https://github.com/kbzowski/google-chat-electron) client, licensed under MIT.
 
@@ -35,4 +35,4 @@ Produces MSI + NSIS installers in `src-tauri/target/release/bundle/`.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT - see [LICENSE](./LICENSE).
