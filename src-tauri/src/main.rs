@@ -71,9 +71,15 @@ fn main() {
                     false
                 }
             })
+            .on_page_load(|window, payload| {
+                if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished) {
+                    features::taskbar::show_normal(&window);
+                }
+            })
             .build()?;
 
             window::attach_close_to_tray(&window);
+            features::taskbar::show_loading(&window);
             features::tray::build_tray(app)?;
             features::notifications::setup_click_handler(app.handle());
             features::badge::setup_listener(app.handle());

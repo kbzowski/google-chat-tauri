@@ -7,6 +7,7 @@ pub mod injection_log;
 pub mod menu;
 pub mod notifications;
 pub mod online;
+pub mod taskbar;
 pub mod tray;
 pub mod user_agent;
 pub mod window;
