@@ -47,6 +47,7 @@ fn main() {
             features::focus_mode::enable_focus_mode,
             features::focus_mode::disable_focus_mode,
             features::focus_mode::is_focus_mode_active,
+            features::updater::check_for_updates_command,
         ])
         .setup(|app| {
             let settings = features::config::load(app.handle());

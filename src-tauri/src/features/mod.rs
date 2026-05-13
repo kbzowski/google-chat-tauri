@@ -12,6 +12,7 @@ pub mod shortcuts;
 pub mod taskbar;
 pub mod theme;
 pub mod tray;
+pub mod updater;
 pub mod user_agent;
 pub mod watchdog;
 pub mod window;

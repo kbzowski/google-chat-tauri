@@ -326,6 +326,12 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         "help-shortcuts" => {
             let _ = crate::features::windows::open_shortcuts(app.clone());
         }
+        "help-check-updates" => {
+            let handle = app.clone();
+            tauri::async_runtime::spawn(async move {
+                crate::features::updater::check_and_prompt(handle, true).await;
+            });
+        }
         "zoom-in" | "zoom-out" | "reset-zoom" => {
             let mut settings = load(app);
             settings.zoom_level = match event_id {
