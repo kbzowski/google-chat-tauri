@@ -1,11 +1,27 @@
 import { emit } from '@tauri-apps/api/event';
+import { isFocusModeActive } from './focus-mode';
 import { logger } from './lib/logger';
 
 const log = logger('injection::notification');
 export const EVENT_CLICKED = 'notification-clicked';
 
-export function buildPatched(Original: typeof Notification): typeof Notification {
+class SuppressedNotification extends EventTarget {
+  close(): void {}
+  // Mirror Notification interface stub - properties default to empty strings.
+  title = '';
+  body = '';
+  tag = '';
+}
+
+export function buildPatched(
+  Original: typeof Notification,
+  isSuppressed: () => boolean = isFocusModeActive,
+): typeof Notification {
   function Patched(title: string, options: NotificationOptions = {}): Notification {
+    if (isSuppressed()) {
+      log.debug('Notification suppressed by focus mode', { title });
+      return new SuppressedNotification() as unknown as Notification;
+    }
     const instance = new Original(title, {
       ...options,
       requireInteraction: true,

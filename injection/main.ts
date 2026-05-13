@@ -1,6 +1,7 @@
 import { installCustomCss } from './custom-css';
 import { installErrorCapture } from './error-capture';
 import { installFaviconObserver } from './favicon-observer';
+import { installFocusMode } from './focus-mode';
 import { installNotificationPatch } from './notification-patch';
 import { installSearchFocus } from './search-focus';
 import { installUnreadCounter } from './unread-counter';
@@ -15,6 +16,7 @@ declare global {
 if (!window.__googleChatTauriInjected) {
   window.__googleChatTauriInjected = true;
   installErrorCapture();
+  installFocusMode();
   installNotificationPatch();
 
   const initDom = () => {

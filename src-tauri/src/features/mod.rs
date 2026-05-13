@@ -3,6 +3,7 @@ pub mod config;
 pub mod crash_report;
 pub mod debug_info;
 pub mod external_links;
+pub mod focus_mode;
 pub mod injection_log;
 pub mod menu;
 pub mod notifications;

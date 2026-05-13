@@ -43,6 +43,9 @@ fn main() {
             features::windows::open_settings,
             features::windows::open_about,
             features::windows::open_offline,
+            features::focus_mode::enable_focus_mode,
+            features::focus_mode::disable_focus_mode,
+            features::focus_mode::is_focus_mode_active,
         ])
         .setup(|app| {
             let settings = features::config::load(app.handle());

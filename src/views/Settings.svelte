@@ -1,4 +1,5 @@
 <script lang="ts">
+import { invoke } from '@tauri-apps/api/core';
 import { onMount } from 'svelte';
 import Toggle from '../lib/components/Toggle.svelte';
 import type { Theme } from '../lib/ipc';
@@ -17,6 +18,15 @@ onMount(() => {
 
 function set<K extends keyof typeof current>(key: K, value: (typeof current)[K]) {
   updateSetting(key, value);
+}
+
+async function toggleFocusMode(active: boolean) {
+  if (active) {
+    await invoke('enable_focus_mode', { durationMinutes: current.focusModeDuration });
+  } else {
+    await invoke('disable_focus_mode');
+  }
+  set('focusMode', active);
 }
 </script>
 
@@ -129,6 +139,33 @@ function set<K extends keyof typeof current>(key: K, value: (typeof current)[K])
       checked={current.hideMenuBar}
       onchange={(v) => set('hideMenuBar', v)}
     />
+  </section>
+
+  <section>
+    <h2>Focus Mode</h2>
+    <Toggle
+      label="Active"
+      description="Suppresses notifications for the configured duration"
+      checked={current.focusMode}
+      onchange={toggleFocusMode}
+    />
+    <label class="row">
+      <span>Duration (minutes)</span>
+      <select
+        value={String(current.focusModeDuration)}
+        onchange={(e) =>
+          set(
+            'focusModeDuration',
+            Number.parseInt((e.currentTarget as HTMLSelectElement).value, 10),
+          )}
+      >
+        <option value="5">5</option>
+        <option value="15">15</option>
+        <option value="25">25</option>
+        <option value="60">60</option>
+        <option value="120">120</option>
+      </select>
+    </label>
   </section>
 
   <section>
