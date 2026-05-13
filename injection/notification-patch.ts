@@ -18,8 +18,15 @@ export function buildPatched(Original: typeof Notification): typeof Notification
     return instance;
   }
   Patched.requestPermission = Original.requestPermission.bind(Original);
+  // Mirror Original.permission as a writable property. Google Chat reassigns
+  // window.Notification.permission and a getter-only property would throw.
   Object.defineProperty(Patched, 'permission', {
+    configurable: true,
+    enumerable: true,
     get: () => Original.permission,
+    set: () => {
+      // Permission is owned by the browser; silently ignore writes.
+    },
   });
   return Patched as unknown as typeof Notification;
 }
