@@ -87,6 +87,19 @@ fn main() {
             features::badge::setup_listener(app.handle());
             features::injection_log::setup_listener(app.handle());
             features::crash_report::install_hook(app.handle().clone());
+            features::shortcuts::re_register_from_config(app.handle());
+
+            {
+                use tauri::Listener;
+                let handle = app.handle().clone();
+                app.listen("apply-shortcut", move |event| {
+                    if let Ok(shortcut) = serde_json::from_str::<String>(event.payload()) {
+                        if let Err(err) = features::shortcuts::register(&handle, &shortcut) {
+                            log::warn!(target: "shortcuts", "re-register failed: {err}");
+                        }
+                    }
+                });
+            }
 
             let menu = features::menu::build(app.handle())?;
             app.set_menu(menu)?;
