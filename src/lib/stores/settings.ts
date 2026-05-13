@@ -19,6 +19,7 @@ const DEFAULT: AppSettings = {
   customCss: '',
   showUnreadInTitle: true,
   showUnreadInTray: true,
+  minimizeToTray: false,
   externalLinksGuardEnabled: true,
   externalLinksGuardDisabledUntil: null,
 };

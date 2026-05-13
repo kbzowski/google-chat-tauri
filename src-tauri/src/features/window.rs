@@ -1,5 +1,7 @@
 use tauri::{AppHandle, Manager, WebviewWindow, WindowEvent};
 
+use crate::features::config::{self, AppSettings};
+
 pub const MAIN_WINDOW_LABEL: &str = "main";
 pub const WINDOW_TITLE: &str = "Google Chat";
 
@@ -21,6 +23,21 @@ pub fn attach_close_to_tray(window: &WebviewWindow) {
         if let WindowEvent::CloseRequested { api, .. } = event {
             api.prevent_close();
             let _ = win.hide();
+        }
+    });
+}
+
+pub fn apply_initial_state(window: &WebviewWindow, settings: &AppSettings) {
+    let _ = window.set_always_on_top(settings.always_on_top);
+}
+
+pub fn attach_minimize_to_tray(window: &WebviewWindow, app: AppHandle) {
+    let win = window.clone();
+    window.on_window_event(move |event| {
+        if let WindowEvent::Resized(_) = event {
+            if win.is_minimized().unwrap_or(false) && config::load(&app).minimize_to_tray {
+                let _ = win.hide();
+            }
         }
     });
 }

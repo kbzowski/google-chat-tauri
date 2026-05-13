@@ -21,6 +21,7 @@ export interface AppSettings {
   customCss: string;
   showUnreadInTitle: boolean;
   showUnreadInTray: boolean;
+  minimizeToTray: boolean;
   externalLinksGuardEnabled: boolean;
   externalLinksGuardDisabledUntil: number | null;
 }

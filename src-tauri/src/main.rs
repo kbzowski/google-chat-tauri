@@ -79,6 +79,8 @@ fn main() {
             .build()?;
 
             window::attach_close_to_tray(&window);
+            window::apply_initial_state(&window, &settings);
+            window::attach_minimize_to_tray(&window, app.handle().clone());
             features::taskbar::show_loading(&window);
             features::tray::build_tray(app)?;
             features::notifications::setup_click_handler(app.handle());

@@ -21,6 +21,7 @@ vi.mock('../../lib/ipc', () => ({
       customCss: '',
       showUnreadInTitle: true,
       showUnreadInTray: true,
+      minimizeToTray: false,
       externalLinksGuardEnabled: true,
       externalLinksGuardDisabledUntil: null,
     }),

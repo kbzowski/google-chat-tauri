@@ -56,6 +56,12 @@ function set<K extends keyof typeof current>(key: K, value: (typeof current)[K])
       checked={current.autoCheckForUpdates}
       onchange={(v) => set('autoCheckForUpdates', v)}
     />
+    <Toggle
+      label="Minimize to tray"
+      description="Hide the window when minimized instead of leaving it in the taskbar"
+      checked={current.minimizeToTray}
+      onchange={(v) => set('minimizeToTray', v)}
+    />
   </section>
 
   <section>

@@ -27,6 +27,7 @@ pub struct AppSettings {
     pub custom_css: String,
     pub show_unread_in_title: bool,
     pub show_unread_in_tray: bool,
+    pub minimize_to_tray: bool,
 
     pub external_links_guard_enabled: bool,
     pub external_links_guard_disabled_until: Option<i64>,
@@ -60,6 +61,7 @@ impl Default for AppSettings {
             custom_css: String::new(),
             show_unread_in_title: true,
             show_unread_in_tray: true,
+            minimize_to_tray: false,
             external_links_guard_enabled: true,
             external_links_guard_disabled_until: None,
         }
