@@ -36,10 +36,18 @@ button {
   color: var(--fg);
   padding: 0.4rem 0.9rem;
   border-radius: 4px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
 button:hover {
   border-color: var(--accent);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 button:disabled {
@@ -56,5 +64,22 @@ select {
   color: var(--fg);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 0.3rem 0.5rem;
+  padding: 0.35rem 0.55rem;
+  transition: border-color 0.15s ease;
+}
+
+input[type='text']:hover,
+input[type='number']:hover,
+textarea:hover,
+select:hover {
+  border-color: var(--accent);
+}
+
+input[type='text']:focus-visible,
+input[type='number']:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
 }
