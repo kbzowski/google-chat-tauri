@@ -93,6 +93,8 @@ fn main() {
             features::shortcuts::re_register_from_config(app.handle());
             features::theme::apply_from_config(app.handle());
             features::watchdog::spawn_online_watchdog(app.handle().clone());
+            features::watchdog::setup_heartbeat_listener(app.handle());
+            features::watchdog::spawn_stuck_watchdog(app.handle().clone());
 
             {
                 use tauri::Listener;
