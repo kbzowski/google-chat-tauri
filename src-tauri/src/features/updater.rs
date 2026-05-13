@@ -1,6 +1,10 @@
+use std::time::Duration;
+
 use tauri::AppHandle;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
 use tauri_plugin_updater::UpdaterExt;
+
+const STARTUP_DELAY: Duration = Duration::from_secs(5);
 
 pub async fn check_and_prompt(app: AppHandle, manual: bool) {
     let updater = match app.updater() {
@@ -71,4 +75,15 @@ pub async fn check_and_prompt(app: AppHandle, manual: bool) {
 #[tauri::command]
 pub async fn check_for_updates_command(app: AppHandle) {
     check_and_prompt(app, true).await;
+}
+
+pub fn spawn_startup_check(app: AppHandle) {
+    if !crate::features::config::load(&app).auto_check_for_updates {
+        log::debug!(target: "updater", "Auto-check disabled in config; skipping startup check");
+        return;
+    }
+    tauri::async_runtime::spawn(async move {
+        tokio::time::sleep(STARTUP_DELAY).await;
+        check_and_prompt(app, false).await;
+    });
 }

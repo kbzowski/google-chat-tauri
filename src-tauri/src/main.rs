@@ -97,6 +97,7 @@ fn main() {
             features::watchdog::spawn_online_watchdog(app.handle().clone());
             features::watchdog::setup_heartbeat_listener(app.handle());
             features::watchdog::spawn_stuck_watchdog(app.handle().clone());
+            features::updater::spawn_startup_check(app.handle().clone());
 
             {
                 use tauri::{Listener, Manager};
