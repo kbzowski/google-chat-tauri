@@ -13,6 +13,7 @@ pub mod taskbar;
 pub mod theme;
 pub mod tray;
 pub mod user_agent;
+pub mod watchdog;
 pub mod window;
 pub mod windows;
 pub mod zoom;

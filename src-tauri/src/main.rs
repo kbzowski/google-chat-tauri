@@ -92,6 +92,7 @@ fn main() {
             features::crash_report::install_hook(app.handle().clone());
             features::shortcuts::re_register_from_config(app.handle());
             features::theme::apply_from_config(app.handle());
+            features::watchdog::spawn_online_watchdog(app.handle().clone());
 
             {
                 use tauri::Listener;

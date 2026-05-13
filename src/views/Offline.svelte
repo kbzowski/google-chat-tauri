@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { onDestroy, onMount } from 'svelte';
 import { checkIfOnline, emit } from '../lib/ipc';
@@ -17,6 +18,11 @@ async function retry(): Promise<void> {
     const online = await checkIfOnline();
     if (online) {
       emit('connection-restored').catch(() => {});
+      try {
+        await getCurrentWebviewWindow().close();
+      } catch {
+        // window may already be closing
+      }
     }
   } finally {
     checking = false;
