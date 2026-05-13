@@ -9,6 +9,7 @@ pub mod notifications;
 pub mod online;
 pub mod shortcuts;
 pub mod taskbar;
+pub mod theme;
 pub mod tray;
 pub mod user_agent;
 pub mod window;

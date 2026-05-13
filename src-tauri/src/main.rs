@@ -88,6 +88,7 @@ fn main() {
             features::injection_log::setup_listener(app.handle());
             features::crash_report::install_hook(app.handle().clone());
             features::shortcuts::re_register_from_config(app.handle());
+            features::theme::apply_from_config(app.handle());
 
             {
                 use tauri::Listener;
@@ -97,6 +98,14 @@ fn main() {
                         if let Err(err) = features::shortcuts::register(&handle, &shortcut) {
                             log::warn!(target: "shortcuts", "re-register failed: {err}");
                         }
+                    }
+                });
+                let handle = app.handle().clone();
+                app.listen("apply-theme", move |event| {
+                    if let Ok(theme) =
+                        serde_json::from_str::<features::config::Theme>(event.payload())
+                    {
+                        features::theme::apply(&handle, theme);
                     }
                 });
             }
