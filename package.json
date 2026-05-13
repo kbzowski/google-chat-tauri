@@ -1,6 +1,6 @@
 {
   "name": "google-chat-tauri",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "description": "Tauri reimplementation of Google Chat desktop client for Windows",
