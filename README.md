@@ -33,6 +33,26 @@ pnpm tauri build
 
 Produces MSI + NSIS installers in `src-tauri/target/release/bundle/`.
 
+## Releases
+
+This project uses [release-please](https://github.com/googleapis/release-please) to automate version bumps and changelog generation from [Conventional Commits](https://www.conventionalcommits.org/).
+
+1. Push commits with `feat:` / `fix:` / `perf:` prefixes to `main`.
+2. The `Release Please` workflow opens (or updates) a PR titled `chore(main): release google-chat-tauri X.Y.Z`.
+3. Merging that PR creates a git tag and publishes a GitHub Release.
+4. `.github/workflows/release.yml` runs on `release: published`:
+   - Installs Node/Rust/pnpm, builds the injection bundle and Svelte UI.
+   - `tauri-apps/tauri-action@v0` produces `.msi` and `.nsis` installers, signs them with the `TAURI_SIGNING_PRIVATE_KEY` GitHub Secret, and uploads them as release assets alongside `latest.json` for the auto-updater.
+5. Installed clients call `tauri-plugin-updater` 5 seconds after launch (when `autoCheckForUpdates` is enabled in Settings) and from `Help → Check For Updates`. They fetch `latest.json`, verify its signature against the public key embedded in `src-tauri/tauri.conf.json`, download the new installer, and prompt the user to install.
+
+### Signing key
+
+The private key lives at `~/.tauri/google-chat-tauri.key` on the maintainer's machine and is mirrored as the `TAURI_SIGNING_PRIVATE_KEY` GitHub Secret. The matching public key is embedded in `src-tauri/tauri.conf.json` under `plugins.updater.pubkey`. Rotating the key requires updating both the secret and the config file - clients holding the old public key will reject updates signed with the new key until they reinstall manually.
+
+### Authenticode signing
+
+Authenticode certificates require a paid HSM and are not configured for this project. Windows SmartScreen will warn users on first install of the unsigned MSI/NSIS, which is expected for an open-source build until a certificate is procured.
+
 ## License
 
 MIT - see [LICENSE](./LICENSE).
