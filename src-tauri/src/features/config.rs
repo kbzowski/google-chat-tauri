@@ -6,8 +6,10 @@ pub const STORE_FILE: &str = "settings.json";
 const SETTINGS_KEY: &str = "settings";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", default)]
 pub struct AppSettings {
+    pub account_index: u32,
+
     pub auto_check_for_updates: bool,
     pub auto_launch_at_login: bool,
     pub start_hidden: bool,
@@ -41,6 +43,7 @@ pub enum Theme {
 impl Default for AppSettings {
     fn default() -> Self {
         Self {
+            account_index: 0,
             auto_check_for_updates: true,
             auto_launch_at_login: false,
             start_hidden: false,

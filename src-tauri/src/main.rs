@@ -6,8 +6,11 @@ mod features;
 use features::user_agent::USER_AGENT;
 use features::window;
 
-const GOOGLE_CHAT_URL: &str = "https://mail.google.com/chat/u/0";
 const INJECTION_SCRIPT: &str = include_str!("../injection.js");
+
+fn chat_url(account_index: u32) -> String {
+    format!("https://mail.google.com/chat/u/{account_index}")
+}
 
 fn main() {
     tauri::Builder::default()
@@ -42,7 +45,10 @@ fn main() {
             features::windows::open_offline,
         ])
         .setup(|app| {
-            let url = GOOGLE_CHAT_URL.parse().expect("invalid Google Chat URL");
+            let settings = features::config::load(app.handle());
+            let url = chat_url(settings.account_index)
+                .parse()
+                .expect("invalid Google Chat URL");
             let app_handle = app.handle().clone();
             let window = tauri::WebviewWindowBuilder::new(
                 app,
@@ -88,4 +94,16 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn chat_url_uses_account_index() {
+        assert_eq!(chat_url(0), "https://mail.google.com/chat/u/0");
+        assert_eq!(chat_url(1), "https://mail.google.com/chat/u/1");
+        assert_eq!(chat_url(9), "https://mail.google.com/chat/u/9");
+    }
 }

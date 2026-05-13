@@ -2,6 +2,7 @@ import { type Writable, writable } from 'svelte/store';
 import { type AppSettings, getSettings, setSettings } from '../ipc';
 
 const DEFAULT: AppSettings = {
+  accountIndex: 0,
   autoCheckForUpdates: true,
   autoLaunchAtLogin: false,
   startHidden: false,

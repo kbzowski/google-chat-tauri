@@ -4,6 +4,7 @@ import { emit, listen, type UnlistenFn } from '@tauri-apps/api/event';
 export type Theme = 'system' | 'light' | 'dark';
 
 export interface AppSettings {
+  accountIndex: number;
   autoCheckForUpdates: boolean;
   autoLaunchAtLogin: boolean;
   startHidden: boolean;

@@ -25,6 +25,20 @@ function set<K extends keyof typeof current>(key: K, value: (typeof current)[K])
 
   <section>
     <h2>Startup</h2>
+    <label class="row">
+      <span>
+        <span class="label">Google account index</span>
+        <span class="description">URL becomes mail.google.com/chat/u/&lt;index&gt;. Restart required.</span>
+      </span>
+      <input
+        type="number"
+        min="0"
+        max="9"
+        value={current.accountIndex}
+        onchange={(e) =>
+          set('accountIndex', Number.parseInt((e.currentTarget as HTMLInputElement).value, 10))}
+      />
+    </label>
     <Toggle
       label="Auto Launch at Login"
       description="Start google-chat-tauri when you sign in to Windows"

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('../../lib/ipc', () => ({
   getSettings: vi.fn(() =>
     Promise.resolve({
+      accountIndex: 0,
       autoCheckForUpdates: true,
       autoLaunchAtLogin: false,
       startHidden: false,
