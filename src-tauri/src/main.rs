@@ -43,6 +43,7 @@ fn main() {
             features::windows::open_settings,
             features::windows::open_about,
             features::windows::open_offline,
+            features::windows::open_shortcuts,
             features::focus_mode::enable_focus_mode,
             features::focus_mode::disable_focus_mode,
             features::focus_mode::is_focus_mode_active,
@@ -97,7 +98,7 @@ fn main() {
             features::watchdog::spawn_stuck_watchdog(app.handle().clone());
 
             {
-                use tauri::Listener;
+                use tauri::{Listener, Manager};
                 let handle = app.handle().clone();
                 app.listen("apply-shortcut", move |event| {
                     if let Ok(shortcut) = serde_json::from_str::<String>(event.payload()) {
@@ -112,6 +113,16 @@ fn main() {
                         serde_json::from_str::<features::config::Theme>(event.payload())
                     {
                         features::theme::apply(&handle, theme);
+                    }
+                });
+                let handle = app.handle().clone();
+                app.listen("apply-always-on-top", move |event| {
+                    if let Ok(value) = serde_json::from_str::<bool>(event.payload()) {
+                        if let Some(window) =
+                            handle.get_webview_window(features::window::MAIN_WINDOW_LABEL)
+                        {
+                            let _ = window.set_always_on_top(value);
+                        }
                     }
                 });
             }

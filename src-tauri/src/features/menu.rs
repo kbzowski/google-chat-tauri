@@ -214,6 +214,13 @@ pub fn build(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
         .separator()
         .item(&MenuItem::with_id(
             app,
+            "help-shortcuts",
+            "Keyboard Shortcuts",
+            true,
+            None::<&str>,
+        )?)
+        .item(&MenuItem::with_id(
+            app,
             "help-offline",
             "Show Offline Page",
             true,
@@ -315,6 +322,9 @@ pub fn handle_event(app: &AppHandle, event_id: &str) {
         }
         "help-offline" => {
             let _ = crate::features::windows::open_offline(app.clone());
+        }
+        "help-shortcuts" => {
+            let _ = crate::features::windows::open_shortcuts(app.clone());
         }
         "zoom-in" | "zoom-out" | "reset-zoom" => {
             let mut settings = load(app);

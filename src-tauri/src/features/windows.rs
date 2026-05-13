@@ -30,3 +30,9 @@ pub fn open_about(app: AppHandle) -> Result<(), String> {
 pub fn open_offline(app: AppHandle) -> Result<(), String> {
     ensure_window(&app, "offline", "Offline", (480.0, 360.0)).map_err(|e| e.to_string())
 }
+
+#[tauri::command]
+pub fn open_shortcuts(app: AppHandle) -> Result<(), String> {
+    ensure_window(&app, "shortcuts", "Keyboard Shortcuts", (480.0, 540.0))
+        .map_err(|e| e.to_string())
+}

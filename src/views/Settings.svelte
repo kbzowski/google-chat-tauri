@@ -1,5 +1,6 @@
 <script lang="ts">
 import { invoke } from '@tauri-apps/api/core';
+import { emit } from '@tauri-apps/api/event';
 import { onMount } from 'svelte';
 import Toggle from '../lib/components/Toggle.svelte';
 import type { Theme } from '../lib/ipc';
@@ -16,8 +17,13 @@ onMount(() => {
   return () => unsubscribe();
 });
 
-function set<K extends keyof typeof current>(key: K, value: (typeof current)[K]) {
-  updateSetting(key, value);
+async function set<K extends keyof typeof current>(key: K, value: (typeof current)[K]) {
+  await updateSetting(key, value);
+  if (key === 'theme') await emit('apply-theme', value);
+  else if (key === 'zoomLevel') await emit('apply-zoom', value);
+  else if (key === 'customCss') await emit('apply-custom-css', { css: value });
+  else if (key === 'alwaysOnTop') await emit('apply-always-on-top', value);
+  else if (key === 'globalShortcut') await emit('apply-shortcut', value);
 }
 
 async function toggleFocusMode(active: boolean) {

@@ -1,6 +1,13 @@
 import { fireEvent, render } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(() => Promise.resolve()),
+}));
+vi.mock('@tauri-apps/api/event', () => ({
+  emit: vi.fn(() => Promise.resolve()),
+}));
+
 vi.mock('../../lib/ipc', () => ({
   getSettings: vi.fn(() =>
     Promise.resolve({
@@ -52,5 +59,14 @@ describe('Settings view', () => {
     const aot = getByLabelText(/always on top/i) as HTMLInputElement;
     await fireEvent.click(aot);
     expect(setSettings).toHaveBeenCalledWith(expect.objectContaining({ alwaysOnTop: true }));
+  });
+
+  it('emits apply-always-on-top when toggle clicked', async () => {
+    const { emit } = await import('@tauri-apps/api/event');
+    const { getByLabelText } = render(Settings);
+    const aot = getByLabelText(/always on top/i) as HTMLInputElement;
+    await fireEvent.click(aot);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(emit).toHaveBeenCalledWith('apply-always-on-top', true);
   });
 });

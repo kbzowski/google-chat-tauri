@@ -2,7 +2,7 @@
   "$schema": "https://schemas.tauri.app/schema/2/capabilities/capability.json",
   "identifier": "default",
   "description": "Default capabilities for the main window and auxiliary windows",
-  "windows": ["main", "settings", "offline", "about"],
+  "windows": ["main", "settings", "offline", "about", "shortcuts"],
   "permissions": [
     "core:default",
     "core:event:default",
