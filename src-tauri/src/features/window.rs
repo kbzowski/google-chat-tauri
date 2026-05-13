@@ -1,6 +1,19 @@
 use tauri::{AppHandle, Manager, WebviewWindow, WindowEvent};
 
 pub const MAIN_WINDOW_LABEL: &str = "main";
+pub const WINDOW_TITLE: &str = "Google Chat";
+
+pub fn title_with_count(count: i64) -> String {
+    if count > 0 {
+        format!("({count}) {WINDOW_TITLE}")
+    } else {
+        WINDOW_TITLE.to_string()
+    }
+}
+
+pub fn update_title(window: &WebviewWindow, count: i64) {
+    let _ = window.set_title(&title_with_count(count));
+}
 
 pub fn attach_close_to_tray(window: &WebviewWindow) {
     let win = window.clone();
@@ -63,5 +76,17 @@ mod tests {
     fn unrelated_flag_does_not_match() {
         let args = vec!["app.exe".into(), "--start-something-else".into()];
         assert!(!should_start_hidden(args));
+    }
+
+    #[test]
+    fn title_zero_count_omits_prefix() {
+        assert_eq!(title_with_count(0), "Google Chat");
+        assert_eq!(title_with_count(-1), "Google Chat");
+    }
+
+    #[test]
+    fn title_with_positive_count_uses_parenthesised_prefix() {
+        assert_eq!(title_with_count(1), "(1) Google Chat");
+        assert_eq!(title_with_count(99), "(99) Google Chat");
     }
 }

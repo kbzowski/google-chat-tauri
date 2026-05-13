@@ -1,8 +1,9 @@
 use serde::Deserialize;
 use tauri::{AppHandle, Listener, Manager};
 
+use crate::features::config;
 use crate::features::tray::{self, TrayState};
-use crate::features::window::MAIN_WINDOW_LABEL;
+use crate::features::window::{self, MAIN_WINDOW_LABEL};
 
 pub const EVENT_UNREAD: &str = "unread-count";
 
@@ -21,11 +22,17 @@ pub fn setup_listener(app: &AppHandle) {
     let handle = app.clone();
     app.listen(EVENT_UNREAD, move |event| {
         let count = parse_count(event.payload());
+        let settings = config::load(&handle);
         if let Some(window) = handle.get_webview_window(MAIN_WINDOW_LABEL) {
             let badge = if count > 0 { Some(count) } else { None };
             let _ = window.set_badge_count(badge);
+            if settings.show_unread_in_title {
+                window::update_title(&window, count);
+            }
         }
-        let _ = tray::set_state(&handle, TrayState::from_unread(count));
+        if settings.show_unread_in_tray {
+            let _ = tray::set_state(&handle, TrayState::from_unread(count));
+        }
     });
 }
 
