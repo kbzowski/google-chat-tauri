@@ -41,4 +41,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ inputs.tag || github.ref_name }}
+          releaseName: ${{ inputs.tag || github.ref_name }}
+          releaseDraft: false
+          prerelease: false
           args: --bundles msi,nsis
