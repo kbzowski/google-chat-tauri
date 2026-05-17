@@ -48,6 +48,7 @@ fn main() {
             features::focus_mode::disable_focus_mode,
             features::focus_mode::is_focus_mode_active,
             features::updater::check_for_updates_command,
+            features::menu::toggle_main_menu,
         ])
         .setup(|app| {
             let settings = features::config::load(app.handle());
@@ -131,6 +132,7 @@ fn main() {
 
             let menu = features::menu::build(app.handle())?;
             app.set_menu(menu)?;
+            let _ = window.hide_menu();
 
             if window::should_start_hidden(std::env::args()) {
                 let _ = window.hide();

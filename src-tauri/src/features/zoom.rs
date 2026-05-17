@@ -4,6 +4,7 @@ use crate::features::config::{load, save};
 
 pub const ZOOM_MIN: f64 = 0.5;
 pub const ZOOM_MAX: f64 = 3.0;
+#[allow(dead_code)]
 pub const ZOOM_STEP: f64 = 0.1;
 
 pub fn clamp(value: f64) -> f64 {
