@@ -2,7 +2,7 @@ name: Release Build
 
 on:
   push:
-    tags: ['v*']
+    tags: ['v*', 'google-chat-tauri-v*']
   workflow_dispatch:
     inputs:
       tag:
