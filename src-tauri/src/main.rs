@@ -65,6 +65,9 @@ fn main() {
             .inner_size(1280.0, 900.0)
             .center()
             .user_agent(USER_AGENT)
+            // Let WebView2 deliver file drops to Google Chat. Tauri's OS-level
+            // drag-drop handler otherwise swallows them before the page sees them.
+            .disable_drag_drop_handler()
             .initialization_script(INJECTION_SCRIPT)
             .on_navigation(move |url| {
                 if features::external_links::is_whitelisted(url) {
