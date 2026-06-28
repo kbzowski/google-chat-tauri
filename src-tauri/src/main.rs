@@ -98,7 +98,7 @@ fn main() {
             window::attach_minimize_to_tray(&window, app.handle().clone());
             features::taskbar::show_loading(&window);
             features::tray::build_tray(app)?;
-            features::notifications::setup_click_handler(app.handle());
+            features::notifications::setup_message_listener(app.handle());
             features::badge::setup_listener(app.handle());
             features::injection_log::setup_listener(app.handle());
             features::crash_report::install_hook(app.handle().clone());

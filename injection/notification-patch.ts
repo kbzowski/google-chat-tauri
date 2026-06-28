@@ -3,7 +3,7 @@ import { isFocusModeActive } from './focus-mode';
 import { logger } from './lib/logger';
 
 const log = logger('injection::notification');
-export const EVENT_CLICKED = 'notification-clicked';
+export const EVENT_MESSAGE = 'notification-message';
 
 class SuppressedNotification extends EventTarget {
   close(): void {}
@@ -13,33 +13,33 @@ class SuppressedNotification extends EventTarget {
   tag = '';
 }
 
-export function buildPatched(
-  Original: typeof Notification,
-  isSuppressed: () => boolean = isFocusModeActive,
-): typeof Notification {
+export interface MessagePayload {
+  title: string;
+  body: string;
+}
+
+export function buildPatched(isSuppressed: () => boolean = isFocusModeActive): typeof Notification {
   function Patched(title: string, options: NotificationOptions = {}): Notification {
-    if (isSuppressed()) {
-      log.debug('Notification suppressed by focus mode', { title });
-      return new SuppressedNotification() as unknown as Notification;
+    if (!isSuppressed()) {
+      const payload: MessagePayload = { title, body: options.body ?? '' };
+      emit(EVENT_MESSAGE, payload).catch(() => {});
     }
-    const instance = new Original(title, {
-      ...options,
-      requireInteraction: true,
-      silent: false,
-    });
-    instance.addEventListener('click', () => {
-      emit(EVENT_CLICKED).catch(() => {});
-      instance.close();
-    });
-    return instance;
+    // Never construct a real browser notification: WebView2 does not surface web
+    // notifications to the OS, and the native toast (driven by EVENT_MESSAGE) owns
+    // display and click handling.
+    return new SuppressedNotification() as unknown as Notification;
   }
-  Patched.requestPermission = Original.requestPermission.bind(Original);
-  // Mirror Original.permission as a writable property. Google Chat reassigns
-  // window.Notification.permission and a getter-only property would throw.
+  // Google Chat only constructs notifications when it believes permission is
+  // granted. WebView2 never grants it (stays "default"), so report granted and
+  // resolve requestPermission accordingly to unlock the constructor above.
+  Patched.requestPermission = ((cb?: NotificationPermissionCallback) => {
+    cb?.('granted');
+    return Promise.resolve('granted' as NotificationPermission);
+  }) as typeof Notification.requestPermission;
   Object.defineProperty(Patched, 'permission', {
     configurable: true,
     enumerable: true,
-    get: () => Original.permission,
+    get: () => 'granted',
     set: () => {
       // Permission is owned by the browser; silently ignore writes.
     },

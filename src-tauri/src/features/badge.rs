@@ -1,5 +1,5 @@
 use std::sync::Mutex;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use serde::Deserialize;
 use tauri::{AppHandle, Listener, Manager};
@@ -9,6 +9,10 @@ use crate::features::window::{self, MAIN_WINDOW_LABEL};
 use crate::features::{config, focus_mode, notifications};
 
 pub const EVENT_UNREAD: &str = "unread-count";
+
+/// How recently a content-driven toast must have fired to suppress the
+/// count-driven fallback for the same incoming message.
+const FALLBACK_DEDUP: Duration = Duration::from_secs(3);
 
 /// Last seen unread count. `None` until the first event so the initial load
 /// (count jumping 0 -> N for already-existing unread chats) does not fire a
@@ -52,11 +56,22 @@ pub fn setup_listener(app: &AppHandle) {
             .lock()
             .expect("badge prev-count mutex poisoned")
             .replace(count);
-        if should_notify(prev, count)
-            && settings.show_on_message
-            && !focus_mode::is_active_now(Instant::now())
-        {
-            notifications::show_new_message(&handle, count);
+        if should_notify(prev, count) && settings.show_on_message {
+            let now = Instant::now();
+            // Content-driven toasts (real sender + body) are primary; this is the
+            // fallback for messages Google Chat does not surface via the
+            // Notification API. Stay quiet when content already notified, when the
+            // user is looking at the window, or during focus mode.
+            let main_focused = handle
+                .get_webview_window(MAIN_WINDOW_LABEL)
+                .and_then(|w| w.is_focused().ok())
+                .unwrap_or(false);
+            let suppressed = focus_mode::is_active_now(now)
+                || main_focused
+                || notifications::content_notified_within(FALLBACK_DEDUP, now);
+            if !suppressed {
+                notifications::show_new_message(&handle, count);
+            }
         }
     });
 }
