@@ -8,7 +8,7 @@ export const EVENT = 'unread-count';
 const PRIMARY = '.XS > span > .XU';
 const FALLBACK = 'div[data-tooltip="Chat"][role="group"], div[data-tooltip="Spaces"][role="group"]';
 const TITLE_REGEX = /^\((\d+)\)/;
-const FAVICON_NOTIF_MARKER = 'new_notif';
+const FAVICON_NOTIF_MARKER = 'favicon_dot_';
 
 export function countFromTitle(title: string): number {
   const match = TITLE_REGEX.exec(title);
@@ -33,11 +33,14 @@ export function countFromFallback(root: ParentNode): number {
   return counter;
 }
 
-export function countFromFavicon(href: string): number {
+// null = favicon absent (head transiently torn down), so the caller should hold
+// the previous count rather than treat the missing signal as "read".
+export function countFromFavicon(href: string): number | null {
+  if (href === '') return null;
   return href.includes(FAVICON_NOTIF_MARKER) ? 1 : 0;
 }
 
-export function computeUnreadCount(): number {
+export function computeUnreadCount(): number | null {
   const primary = countFromPrimary(document.body);
   if (primary > 0) return primary;
   const fallback = countFromFallback(document.body);
@@ -51,6 +54,7 @@ export function installUnreadCounter(): void {
   let previous = -1;
   const check = debounce(() => {
     const count = computeUnreadCount();
+    if (count === null) return;
     if (count !== previous) {
       previous = count;
       log.debug('Unread count changed', { count });

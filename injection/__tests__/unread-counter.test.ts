@@ -4,7 +4,28 @@ vi.mock('@tauri-apps/api/event', () => ({
   emit: vi.fn(() => Promise.resolve()),
 }));
 
-import { countFromFallback, countFromPrimary, countFromTitle } from '../unread-counter';
+import {
+  countFromFallback,
+  countFromFavicon,
+  countFromPrimary,
+  countFromTitle,
+} from '../unread-counter';
+
+const FAVICON_BASE = 'https://www.gstatic.com/dynamite/images/favicons_20260602';
+
+describe('countFromFavicon', () => {
+  it('counts the dot favicon variant as unread', () => {
+    expect(countFromFavicon(`${FAVICON_BASE}/chat_2026_logo_favicon_dot_64px.png`)).toBe(1);
+  });
+
+  it('treats the no-dot variant as read', () => {
+    expect(countFromFavicon(`${FAVICON_BASE}/chat_2026_logo_favicon_no_dot_64px.png`)).toBe(0);
+  });
+
+  it('returns null for an absent favicon so the caller holds the previous count', () => {
+    expect(countFromFavicon('')).toBeNull();
+  });
+});
 
 describe('countFromTitle', () => {
   it('extracts leading parenthesised number', () => {
