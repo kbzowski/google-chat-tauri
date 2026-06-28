@@ -46,19 +46,14 @@ pub fn toggle_main_window(app: &AppHandle) {
     let Some(window) = app.get_webview_window(MAIN_WINDOW_LABEL) else {
         return;
     };
-    match window.is_visible() {
-        Ok(true) => match window.is_focused() {
-            Ok(true) => {
-                let _ = window.hide();
-            }
-            _ => {
-                let _ = window.set_focus();
-            }
-        },
-        _ => {
-            let _ = window.show();
-            let _ = window.set_focus();
-        }
+    let visible = window.is_visible().unwrap_or(false);
+    let minimized = window.is_minimized().unwrap_or(false);
+    if visible && !minimized && window.is_focused().unwrap_or(false) {
+        let _ = window.hide();
+    } else {
+        let _ = window.show();
+        let _ = window.unminimize();
+        let _ = window.set_focus();
     }
 }
 
