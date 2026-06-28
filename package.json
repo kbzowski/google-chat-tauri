@@ -25,24 +25,24 @@
     "icons": "node scripts/generate-icons.js"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.15",
+    "@biomejs/biome": "^2.5.1",
     "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
-    "@tauri-apps/api": "^2.11.0",
-    "@tauri-apps/cli": "^2.11.1",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/cli": "^2.11.3",
     "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
     "@tauri-apps/plugin-opener": "^2.5.4",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/svelte": "^5.3.1",
-    "concurrently": "^9.2.1",
+    "@testing-library/svelte": "^5.4.2",
+    "concurrently": "^10.0.3",
     "jsdom": "^29.1.1",
-    "lefthook": "^2.1.6",
+    "lefthook": "^2.1.9",
     "png-to-ico": "^3.0.1",
-    "svelte": "^5.55.5",
-    "svelte-check": "^4.4.8",
+    "svelte": "^5.56.4",
+    "svelte-check": "^4.7.1",
     "typescript": "^6.0.3",
-    "vite": "^8.0.12",
-    "vitest": "^4.1.6"
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
