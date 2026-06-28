@@ -1,1 +1,2 @@
-onlyBuiltDependencies: '["lefthook"]'
+allowBuilds:
+  lefthook: true
