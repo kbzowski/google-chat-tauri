@@ -53,7 +53,6 @@ export function installNotificationPatch(): void {
     log.warn('window.Notification is not available, skipping patch');
     return;
   }
-  (window as unknown as { Notification: typeof Notification }).Notification =
-    buildPatched(Original);
+  (window as unknown as { Notification: typeof Notification }).Notification = buildPatched();
   log.debug('Notification API patched');
 }
