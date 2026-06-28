@@ -1,4 +1,5 @@
 import { emit } from '@tauri-apps/api/event';
+import { extractFaviconHref } from './favicon-observer';
 import { debounce } from './lib/debounce';
 import { logger } from './lib/logger';
 
@@ -7,6 +8,7 @@ export const EVENT = 'unread-count';
 const PRIMARY = '.XS > span > .XU';
 const FALLBACK = 'div[data-tooltip="Chat"][role="group"], div[data-tooltip="Spaces"][role="group"]';
 const TITLE_REGEX = /^\((\d+)\)/;
+const FAVICON_NOTIF_MARKER = 'new_notif';
 
 export function countFromTitle(title: string): number {
   const match = TITLE_REGEX.exec(title);
@@ -31,12 +33,18 @@ export function countFromFallback(root: ParentNode): number {
   return counter;
 }
 
+export function countFromFavicon(href: string): number {
+  return href.includes(FAVICON_NOTIF_MARKER) ? 1 : 0;
+}
+
 export function computeUnreadCount(): number {
   const primary = countFromPrimary(document.body);
   if (primary > 0) return primary;
   const fallback = countFromFallback(document.body);
   if (fallback > 0) return fallback;
-  return countFromTitle(document.title);
+  const fromTitle = countFromTitle(document.title);
+  if (fromTitle > 0) return fromTitle;
+  return countFromFavicon(extractFaviconHref(document.head));
 }
 
 export function installUnreadCounter(): void {
@@ -59,5 +67,10 @@ export function installUnreadCounter(): void {
   if (titleEl) {
     new MutationObserver(check).observe(titleEl, { childList: true });
   }
+  new MutationObserver(check).observe(document.head, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+  });
   check();
 }

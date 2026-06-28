@@ -13,7 +13,6 @@
     "dialog:default",
     "global-shortcut:default",
     "log:default",
-    "notification:default",
     "opener:default",
     "process:default",
     "shell:default",

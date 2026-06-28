@@ -99,7 +99,7 @@ async function toggleFocusMode(active: boolean) {
     </header>
     <div class="card-body">
       <Toggle
-        label="Show window on new message"
+        label="Show notification on new message"
         checked={current.showOnMessage}
         onchange={(v) => set('showOnMessage', v)}
       />
