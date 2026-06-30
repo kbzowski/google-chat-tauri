@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.0...v0.4.1) (2026-06-30)
+
+
+### Bug Fixes
+
+* **settings:** grant aux windows IPC permission so settings persist ([5774e4c](https://github.com/kbzowski/google-chat-tauri/commit/5774e4c1cd0a75364a854981378d0bde54a668b0))
+
 ## [0.4.0](https://github.com/kbzowski/google-chat-tauri/compare/v0.3.0...v0.4.0) (2026-06-30)
 
 
