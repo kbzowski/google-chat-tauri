@@ -1,0 +1,10 @@
+[[permission]]
+identifier = "allow-injection-ipc"
+description = "Allows the injected Google Chat script in the remote main window to invoke the local app UI commands it needs: toggle the menu bar (Alt), read/set zoom, read custom CSS, and query focus mode."
+commands.allow = [
+    "toggle_main_menu",
+    "get_custom_css",
+    "get_zoom_level",
+    "set_zoom_level",
+    "is_focus_mode_active",
+]
