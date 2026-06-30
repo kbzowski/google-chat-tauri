@@ -6,7 +6,7 @@ const DEFAULT: AppSettings = {
   autoCheckForUpdates: true,
   autoLaunchAtLogin: false,
   startHidden: false,
-  hideMenuBar: false,
+  hideMenuBar: true,
   disableSpellChecker: false,
   showOnMessage: true,
   theme: 'system',

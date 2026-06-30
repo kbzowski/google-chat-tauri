@@ -24,6 +24,9 @@ async function set<K extends keyof typeof current>(key: K, value: (typeof curren
   else if (key === 'customCss') await emit('apply-custom-css', { css: value });
   else if (key === 'alwaysOnTop') await emit('apply-always-on-top', value);
   else if (key === 'globalShortcut') await emit('apply-shortcut', value);
+  else if (key === 'autoLaunchAtLogin') await emit('apply-auto-launch', value);
+  else if (key === 'hideMenuBar') await emit('apply-hide-menu', value);
+  else if (key === 'disableSpellChecker') await emit('apply-spellcheck', value);
 }
 
 async function toggleFocusMode(active: boolean) {

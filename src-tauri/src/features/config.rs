@@ -48,7 +48,7 @@ impl Default for AppSettings {
             auto_check_for_updates: true,
             auto_launch_at_login: false,
             start_hidden: false,
-            hide_menu_bar: false,
+            hide_menu_bar: true,
             disable_spell_checker: false,
             show_on_message: true,
             theme: Theme::System,
@@ -98,6 +98,11 @@ pub fn set_settings(app: AppHandle, settings: AppSettings) -> Result<(), String>
 #[tauri::command]
 pub fn get_custom_css(app: AppHandle) -> String {
     load(&app).custom_css
+}
+
+#[tauri::command]
+pub fn is_spell_check_disabled(app: AppHandle) -> bool {
+    load(&app).disable_spell_checker
 }
 
 #[cfg(test)]

@@ -6,6 +6,7 @@ import { installHeartbeat } from './heartbeat';
 import { installMenuToggle } from './menu-toggle';
 import { installNotificationPatch } from './notification-patch';
 import { installSearchFocus } from './search-focus';
+import { installSpellcheck } from './spellcheck';
 import { installUnreadCounter } from './unread-counter';
 import { installZoom } from './zoom';
 
@@ -29,6 +30,7 @@ if (!window.__googleChatTauriInjected) {
     installZoom();
     installCustomCss();
     installHeartbeat();
+    installSpellcheck();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);

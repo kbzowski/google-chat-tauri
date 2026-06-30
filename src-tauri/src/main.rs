@@ -43,6 +43,7 @@ fn main() {
             features::config::get_settings,
             features::config::set_settings,
             features::config::get_custom_css,
+            features::config::is_spell_check_disabled,
             features::debug_info::get_debug_info,
             features::zoom::get_zoom_level,
             features::zoom::set_zoom_level,
@@ -104,6 +105,7 @@ fn main() {
             features::crash_report::install_hook(app.handle().clone());
             features::shortcuts::re_register_from_config(app.handle());
             features::theme::apply_from_config(app.handle());
+            features::autostart::apply_from_config(app.handle());
             features::watchdog::spawn_online_watchdog(app.handle().clone());
             features::watchdog::setup_heartbeat_listener(app.handle());
             features::watchdog::spawn_stuck_watchdog(app.handle().clone());
@@ -137,13 +139,35 @@ fn main() {
                         }
                     }
                 });
+                let handle = app.handle().clone();
+                app.listen("apply-auto-launch", move |event| {
+                    if let Ok(value) = serde_json::from_str::<bool>(event.payload()) {
+                        features::autostart::apply(&handle, value);
+                    }
+                });
+                let handle = app.handle().clone();
+                app.listen("apply-hide-menu", move |event| {
+                    if let Ok(hidden) = serde_json::from_str::<bool>(event.payload()) {
+                        if let Some(window) =
+                            handle.get_webview_window(features::window::MAIN_WINDOW_LABEL)
+                        {
+                            let _ = if hidden {
+                                window.hide_menu()
+                            } else {
+                                window.show_menu()
+                            };
+                        }
+                    }
+                });
             }
 
             let menu = features::menu::build(app.handle())?;
             app.set_menu(menu)?;
-            let _ = window.hide_menu();
+            if settings.hide_menu_bar {
+                let _ = window.hide_menu();
+            }
 
-            if window::should_start_hidden(std::env::args()) {
+            if window::should_start_hidden(std::env::args()) || settings.start_hidden {
                 let _ = window.hide();
             }
 

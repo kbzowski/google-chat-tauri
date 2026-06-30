@@ -4,6 +4,7 @@ description = "Allows the injected Google Chat script in the remote main window 
 commands.allow = [
     "toggle_main_menu",
     "get_custom_css",
+    "is_spell_check_disabled",
     "get_zoom_level",
     "set_zoom_level",
     "is_focus_mode_active",

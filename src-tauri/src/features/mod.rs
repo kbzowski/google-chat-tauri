@@ -1,3 +1,4 @@
+pub mod autostart;
 pub mod badge;
 pub mod config;
 pub mod crash_report;
