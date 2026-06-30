@@ -1,6 +1,6 @@
 [package]
 name = "google-chat-tauri"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 license = "MIT"
 description = "Tauri reimplementation of Google Chat desktop client for Windows"
