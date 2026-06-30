@@ -11,6 +11,8 @@ pre-commit:
 pre-push:
   parallel: true
   commands:
+    lint:
+      run: pnpm biome check .
     typecheck:
       run: pnpm tsc --noEmit
     clippy:
