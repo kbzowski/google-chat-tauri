@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/kbzowski/google-chat-tauri/compare/v0.3.0...v0.4.0) (2026-06-30)
+
+
+### Features
+
+* **settings:** wire up auto-launch, start-hidden, hide-menu and spellcheck ([55d6fb3](https://github.com/kbzowski/google-chat-tauri/commit/55d6fb32a2b5bdbdab871c18b26f38a630b21a6a))
+
+
+### Bug Fixes
+
+* **menu:** grant remote window IPC so Alt toggles the menu ([f9994ad](https://github.com/kbzowski/google-chat-tauri/commit/f9994ad53de208a81aa416c74e393b64c30d97c5))
+
 ## [0.3.0](https://github.com/kbzowski/google-chat-tauri/compare/v0.2.0...v0.3.0) (2026-06-28)
 
 
