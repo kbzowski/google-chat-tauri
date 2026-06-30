@@ -33,8 +33,8 @@ export async function loadSettings(): Promise<void> {
   try {
     settings.set(await getSettings());
     loaded = true;
-  } catch {
-    // Fall back to defaults already initialised.
+  } catch (e) {
+    console.error('Failed to load settings, using defaults', e);
   }
 }
 

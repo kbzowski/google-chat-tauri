@@ -1,0 +1,11 @@
+[[permission]]
+identifier = "allow-local-ui-ipc"
+description = "Allows the local auxiliary windows (Settings, About, Offline) to invoke the app commands they need: read/write settings, toggle focus mode, read debug info, and check connectivity."
+commands.allow = [
+    "get_settings",
+    "set_settings",
+    "enable_focus_mode",
+    "disable_focus_mode",
+    "get_debug_info",
+    "check_if_online",
+]
