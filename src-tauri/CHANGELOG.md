@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.2...v0.4.3) (2026-07-12)
+
+
+### Bug Fixes
+
+* **auth:** keep Google sign-in inside the webview ([e3e98ef](https://github.com/kbzowski/google-chat-tauri/commit/e3e98ef0b24beda2e5f0d285bca178e672c4d9fe))
+
 ## [0.4.2](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.1...v0.4.2) (2026-07-12)
 
 
