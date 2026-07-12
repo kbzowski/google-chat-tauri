@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.2](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.1...v0.4.2) (2026-07-12)
+
+
+### Bug Fixes
+
+* **notifications:** show 'Google Chat' as toast app name ([50f993a](https://github.com/kbzowski/google-chat-tauri/commit/50f993a82db24f57ffe5c6384e85b486aeeddad7))
+* **updater:** generate updater artifacts so latest.json is published ([0b5c567](https://github.com/kbzowski/google-chat-tauri/commit/0b5c567a166f7c3ab340cd38ea7fbfa91dfb574e))
+
 ## [0.4.1](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.0...v0.4.1) (2026-06-30)
 
 
