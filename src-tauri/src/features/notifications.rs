@@ -9,6 +9,17 @@ use crate::features::window::MAIN_WINDOW_LABEL;
 
 pub const EVENT_MESSAGE: &str = "notification-message";
 
+/// AppUserModelID for toast notifications. Must match the bundle identifier the
+/// installers stamp on the Start Menu shortcut, otherwise toasts don't display.
+#[cfg(all(target_os = "windows", not(debug_assertions)))]
+const APP_ID: &str = "com.google-chat-tauri.app";
+
+/// Friendly name Windows shows as the toast's app attribution. Without this,
+/// the attribution defaults to the Start Menu shortcut name (`productName`,
+/// i.e. the "google-chat-tauri" slug).
+#[cfg(all(target_os = "windows", not(debug_assertions)))]
+const APP_DISPLAY_NAME: &str = "Google Chat";
+
 /// Timestamp of the last content-driven toast. The count-driven fallback in
 /// `badge.rs` checks this so it stays quiet when real message content already
 /// produced a toast.
@@ -77,9 +88,39 @@ fn app_id() -> &'static str {
     }
     #[cfg(not(debug_assertions))]
     {
-        "com.google-chat-tauri.app"
+        APP_ID
     }
 }
+
+/// Register the AUMID's friendly display name so Windows shows "Google Chat" as
+/// the toast attribution instead of the raw `productName` slug. Writes to
+/// `HKCU\Software\Classes\AppUserModelId\{APP_ID}` — the location the toast
+/// platform reads for a custom-AUMID desktop app. Best-effort: a failure only
+/// means the attribution falls back to the shortcut name.
+///
+/// Only in release builds: debug builds toast under the shared PowerShell AUMID
+/// (see `app_id`), which must not be relabeled.
+#[cfg(all(target_os = "windows", not(debug_assertions)))]
+pub fn register_display_name() {
+    use winreg::enums::HKEY_CURRENT_USER;
+    use winreg::RegKey;
+
+    let path = format!("Software\\Classes\\AppUserModelId\\{APP_ID}");
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    match hkcu.create_subkey(&path) {
+        Ok((key, _)) => {
+            if let Err(err) = key.set_value("DisplayName", &APP_DISPLAY_NAME) {
+                log::warn!(target: "notifications", "failed to set toast DisplayName: {err}");
+            }
+        }
+        Err(err) => {
+            log::warn!(target: "notifications", "failed to open AUMID registry key: {err}");
+        }
+    }
+}
+
+#[cfg(not(all(target_os = "windows", not(debug_assertions))))]
+pub fn register_display_name() {}
 
 /// Show a native toast carrying the real sender (`title`) and message preview
 /// (`body`). Falls back to a generic title when the sender is empty.

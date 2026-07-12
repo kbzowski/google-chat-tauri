@@ -1698,6 +1698,7 @@ dependencies = [
  "ureq",
  "url",
  "windows 0.58.0",
+ "winreg 0.55.0",
 ]
 
 [[package]]
