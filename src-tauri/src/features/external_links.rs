@@ -1,5 +1,16 @@
 use url::Url;
 
+/// Whether `host` is a Google account domain, including locale ccTLDs. Sign-in
+/// propagates the session across domains via a SetSID/SetOSID redirect chain that
+/// bounces through `accounts.google.<tld>` (e.g. `accounts.google.pl`), so an
+/// exact `accounts.google.com` match is not enough.
+fn is_google_account_host(host: &str) -> bool {
+    matches!(
+        host,
+        "accounts.youtube.com" | "myaccount.google.com" | "workspace.google.com"
+    ) || host.starts_with("accounts.google.")
+}
+
 pub fn is_whitelisted(url: &Url) -> bool {
     if !matches!(url.scheme(), "http" | "https") {
         return false;
@@ -7,19 +18,26 @@ pub fn is_whitelisted(url: &Url) -> bool {
     let Some(host) = url.host_str() else {
         return false;
     };
+
+    // Authentication and account flows (sign-in, password, 2FA, cross-domain SID
+    // cookie setters). Kept in the webview so login completes in-app.
+    if is_google_account_host(host) {
+        return true;
+    }
+
     match host {
         // Google Chat / Spaces - block direct attachment downloads (those go external).
         "chat.google.com" => !url.path().starts_with("/u/0/api/get_attachment_url"),
 
-        // Gmail host - only the /chat/* subtree, everything else (inbox, settings) external.
-        "mail.google.com" => url.path().starts_with("/chat"),
+        // Gmail host - the /chat/* subtree plus the /accounts session setters
+        // (SetOSID) the login flow redirects through. Everything else (inbox,
+        // settings) goes to the external browser.
+        "mail.google.com" => {
+            url.path().starts_with("/chat") || url.path().starts_with("/accounts")
+        }
 
-        // Authentication and account flows (sign-in, password, recovery, security settings).
-        "accounts.google.com"
-        | "accounts.youtube.com"
-        | "myaccount.google.com"
         // 2FA / device verification / passkeys / identity challenges.
-        | "gds.google.com"
+        "gds.google.com"
         | "challenges.google.com"
         | "passwordsleakcheck-pa.googleapis.com"
         // reCAPTCHA used during sign-in challenges.
@@ -50,6 +68,26 @@ mod tests {
         assert!(is_whitelisted(&u("https://chat.google.com/room/abc")));
         assert!(is_whitelisted(&u("https://accounts.google.com/signin")));
         assert!(is_whitelisted(&u("https://accounts.youtube.com/foo")));
+        assert!(is_whitelisted(&u(
+            "https://workspace.google.com/intl/pl/gmail/"
+        )));
+    }
+
+    #[test]
+    fn login_session_flow_allowed() {
+        // ccTLD account domains used in the cross-domain SID cookie dance.
+        assert!(is_whitelisted(&u(
+            "https://accounts.google.pl/accounts/SetSID?x=1"
+        )));
+        assert!(is_whitelisted(&u("https://accounts.google.co.uk/signin")));
+        // Gmail session setter (SetOSID) bounced through during login.
+        assert!(is_whitelisted(&u(
+            "https://mail.google.com/accounts/SetOSID?authuser=0"
+        )));
+        // Inbox itself still goes external.
+        assert!(!is_whitelisted(&u(
+            "https://mail.google.com/mail/u/0/#inbox"
+        )));
     }
 
     #[test]

@@ -1,3 +1,4 @@
+import { installAuthPopupRedirect } from './auth-popup-redirect';
 import { installCustomCss } from './custom-css';
 import { installErrorCapture } from './error-capture';
 import { installFaviconObserver } from './favicon-observer';
@@ -22,6 +23,7 @@ if (!window.__googleChatTauriInjected) {
   installFocusMode();
   installNotificationPatch();
   installMenuToggle();
+  installAuthPopupRedirect();
 
   const initDom = () => {
     installFaviconObserver();

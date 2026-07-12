@@ -63,6 +63,7 @@ fn main() {
                 .parse()
                 .expect("invalid Google Chat URL");
             let app_handle = app.handle().clone();
+            let new_window_handle = app.handle().clone();
             let window = tauri::WebviewWindowBuilder::new(
                 app,
                 window::MAIN_WINDOW_LABEL,
@@ -86,6 +87,29 @@ fn main() {
                     let _ = app_handle.opener().open_url(url.as_str(), None::<&str>);
                     false
                 }
+            })
+            // Google's sign-in opens the account chooser / consent via `window.open`.
+            // Without this, WebView2 hands those popups to the OS browser (which has a
+            // different session), so login never completes in-app. Mirror the
+            // `on_navigation` policy: keep whitelisted (auth/app) URLs by redirecting the
+            // main webview to them; send everything else to the default browser. Both
+            // branches deny the popup so no stray child window is created.
+            .on_new_window(move |url, _features| {
+                use tauri::Manager;
+                if features::external_links::is_whitelisted(&url) {
+                    log::info!(target: "navigation", "NEWWINDOW->SELF {}", url.as_str());
+                    if let Some(w) = new_window_handle.get_webview_window(window::MAIN_WINDOW_LABEL)
+                    {
+                        let _ = w.navigate(url);
+                    }
+                } else {
+                    use tauri_plugin_opener::OpenerExt;
+                    log::info!(target: "navigation", "NEWWINDOW->EXTERNAL {}", url.as_str());
+                    let _ = new_window_handle
+                        .opener()
+                        .open_url(url.as_str(), None::<&str>);
+                }
+                tauri::webview::NewWindowResponse::Deny
             })
             .on_page_load(|window, payload| {
                 if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished) {
