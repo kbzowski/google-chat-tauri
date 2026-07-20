@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.3...v0.4.4) (2026-07-20)
+
+
+### Bug Fixes
+
+* **notifications:** open the conversation on toast click ([ebb5ffe](https://github.com/kbzowski/google-chat-tauri/commit/ebb5ffefb08c9d12a0db6c442f8570c1b93efa58))
+
 ## [0.4.3](https://github.com/kbzowski/google-chat-tauri/compare/v0.4.2...v0.4.3) (2026-07-12)
 
 
