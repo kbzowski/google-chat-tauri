@@ -2,12 +2,13 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 use serde::Deserialize;
-use tauri::{AppHandle, Listener, Manager};
+use tauri::{AppHandle, Emitter, Listener, Manager};
 
 use crate::features::config;
 use crate::features::window::MAIN_WINDOW_LABEL;
 
 pub const EVENT_MESSAGE: &str = "notification-message";
+pub const EVENT_ACTIVATED: &str = "notification-activated";
 
 /// AppUserModelID for toast notifications. Must match the bundle identifier the
 /// installers stamp on the Start Menu shortcut, otherwise toasts don't display.
@@ -145,6 +146,11 @@ pub fn show_message(app: &AppHandle, title: &str, body: &str, with_sound: bool) 
         })
         .on_activated(move |_action| {
             focus_main_window(&handle);
+            // Google Chat shows notifications via its service worker, which
+            // WebView2 never surfaces to the OS — so the webview cannot correlate
+            // a toast to a specific message. Ask it to open the most-recent unread
+            // conversation instead (which also marks it read).
+            let _ = handle.emit_to(MAIN_WINDOW_LABEL, EVENT_ACTIVATED, ());
             Ok(())
         });
 

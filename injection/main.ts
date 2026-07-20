@@ -5,6 +5,7 @@ import { installFaviconObserver } from './favicon-observer';
 import { installFocusMode } from './focus-mode';
 import { installHeartbeat } from './heartbeat';
 import { installMenuToggle } from './menu-toggle';
+import { installNotificationActivation } from './notification-activation';
 import { installNotificationPatch } from './notification-patch';
 import { installSearchFocus } from './search-focus';
 import { installSpellcheck } from './spellcheck';
@@ -33,6 +34,7 @@ if (!window.__googleChatTauriInjected) {
     installCustomCss();
     installHeartbeat();
     installSpellcheck();
+    installNotificationActivation();
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initDom);
